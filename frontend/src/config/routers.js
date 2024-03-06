@@ -1,11 +1,12 @@
+
 const { createBrowserRouter } = require("react-router-dom");
-const { default: Signup } = require("../pages/Signup");
+const { default: Auth } = require("../pages/Auth");
 
 const router = createBrowserRouter([
-  { path: "/", element: <Signup /> },
+  { path: "/", element: <Auth /> },
   {
     path: "/signup",
-    element: <Signup />,
+    element: <Auth />,
   },
 ]);
 
