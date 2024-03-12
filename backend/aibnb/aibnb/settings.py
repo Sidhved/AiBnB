@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'authentication',
     'rest_framework',
+    'database',
 ]
 
 REST_FRAMEWORK = {
@@ -86,8 +87,12 @@ WSGI_APPLICATION = 'aibnb.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'HOST': 'aws-0-us-east-1.pooler.supabase.com',
+        'NAME': 'postgres',
+        'USER': 'postgres.zqsrcsscinurokxabrcr',
+        'PORT': '5432',
+        'PASSWORD': '5(xtN4t4/(F.DcU',
     }
 }
 
