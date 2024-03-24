@@ -1,6 +1,6 @@
 import React from "react";
-import TextBox from "../Utilities/TextBox";
-import Button from "../Utilities/Button";
+import TextBox from "../Inputs/TextBox";
+import Button from "../Buttons/Button";
 import Logo from "../../assets/aibnb-logo-final.png";
 
 function SignupForm({ showLoginForm }) {

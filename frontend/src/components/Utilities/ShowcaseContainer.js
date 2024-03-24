@@ -3,7 +3,7 @@ import React from "react";
 function ShowcaseContainer({ children }) {
   return (
     <div
-      className="overflow-auto bg-gray-50"
+      className="overflow-auto bg-gray-100"
       style={{
         // Center the child container
         display: "flex",
