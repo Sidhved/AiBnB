@@ -14,25 +14,22 @@ function Auth() {
 
   return (
     <ShowcaseContainer>
-      <div style={{ height: "100%" }} className="space-x-5 flex">
+      <div className="space-x-5 flex h-[100%]">
         {/* Showcase Image */}
         <div
-          style={{ height: "100%" }}
-          className="flex-1 rounded-3xl overflow-hidden shadow-xl"
+          className="h-[100%] flex-1 rounded-3xl overflow-hidden shadow-xl"
         >
           <img
-            className="object-cover" // fit the image into the parent container
-            style={{ height: "100%", width: "100%" }}
+            className="object-cover h-[100%] w-[100%]" // fit the image into the parent container
             src={ShowCaseImage} // modify the image source to change the image
           />
         </div>
 
         {/* Forms */}
         <div
-          style={{ height: "100%" }}
-          className="flex-1 flex items-center justify-center"
+          className="flex-1 flex items-center justify-center h-[100%]"
         >
-          <div style={{ height: "100%", width: "50%" }}>
+          <div className="flex-[0.5]">
             {toShowLoginForm ? (
               <LoginForm showLoginForm={showLoginForm} />
             ) : (

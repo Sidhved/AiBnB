@@ -1,12 +1,12 @@
 import React from "react";
-import TextBox from "../Utilities/TextBox";
-import Button from "../Utilities/Button";
+import TextBox from "../Inputs/TextBox";
+import Button from "../Buttons/Button";
 import Logo from "../../assets/aibnb-logo-final.png";
 
 function LoginForm({ showLoginForm }) {
   return (
     <div
-      className="space-y-7"
+      className="space-y-7 w-[100%]"
       style={{
         height: "100%", // inherit the total height of the parent container
         display: "flex",
