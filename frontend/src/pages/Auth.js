@@ -14,7 +14,7 @@ function Auth() {
 
   return (
     <ShowcaseContainer>
-      <div className="space-x-5 flex h-[100%]">
+      <div className="space-x-5 flex h-[100%]" style={{marginTop: "10%"}}>
         {/* Showcase Image */}
         <div
           className="h-[100%] flex-1 rounded-3xl overflow-hidden shadow-xl"
@@ -29,7 +29,7 @@ function Auth() {
         <div
           className="flex-1 flex items-center justify-center h-[100%]"
         >
-          <div className="flex-[0.5]">
+          <div className="flex-[0.5]" >
             {toShowLoginForm ? (
               <LoginForm showLoginForm={showLoginForm} />
             ) : (
