@@ -32,7 +32,7 @@ function LoginForm({ showLoginForm }) {
         {/* Caption */}
         <div>
           <span className="text-gray-700">
-            Velit non ipsum sint in id proident in sunt.
+            Please login using your email address and password:
           </span>
         </div>
       </div>
