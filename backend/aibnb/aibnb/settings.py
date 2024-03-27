@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'authentication',
     'rest_framework',
     'database',
+    'itinerary_planner',
 ]
 
 REST_FRAMEWORK = {
