@@ -11,18 +11,24 @@ class UserSerializer(serializers.ModelSerializer):
         required=True,
         validators=[UniqueValidator(queryset=User.objects.all())]
         )
-    username = serializers.CharField(
+    firstname = serializers.CharField(
         required=True,
         validators=[UniqueValidator(queryset=User.objects.all())]
         )
-    password = serializers.CharField(max_length=8)
+    lastname = serializers.CharField(
+        required=True,
+        validators=[UniqueValidator(queryset=User.objects.all())]
+        )
+    password = serializers.CharField(max_length=8, write_only=True)
 
     class Meta:
         model = User
-        fields = (
-            'username',
+        fields = ('id',  # 'id' is added to the fields
+            'firstname',
+            'lastname',
             'email',
-            'password'
+            'password',
+            'phone',
         )
 
 
@@ -30,7 +36,7 @@ class UserLoginSerializer(serializers.ModelSerializer):
     # to accept either username or email
     user_id = serializers.CharField()
     password = serializers.CharField()
-    token = serializers.CharField(required=False, read_only=True)
+    token = serializers.CharField(read_only=True)
 
     def validate(self, data):
         # user,email,password validator
@@ -38,24 +44,14 @@ class UserLoginSerializer(serializers.ModelSerializer):
         password = data.get("password", None)
         if not user_id and not password:
             raise ValidationError("Details not entered.")
-        user = None
-        # if the email has been passed
-        if '@' in user_id:
-            user = User.objects.filter(
-                Q(email=user_id) &
-                Q(password=password)
-                ).distinct()
-            if not user.exists():
-                raise ValidationError("User credentials are not correct.")
-            user = User.objects.get(email=user_id)
-        else:
-            user = User.objects.filter(
-                Q(username=user_id) &
-                Q(password=password)
+
+        user = User.objects.filter(
+            Q(email=user_id) &
+            Q(password=password)
             ).distinct()
-            if not user.exists():
-                raise ValidationError("User credentials are not correct.")
-            user = User.objects.get(username=user_id)
+        if not user.exists():
+            raise ValidationError("User credentials are not correct.")
+        user = User.objects.get(email=user_id)
         if user.ifLogged:
             raise ValidationError("User already logged in.")
         user.ifLogged = True
@@ -83,7 +79,6 @@ class UserLogoutSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         token = data.get("token", None)
-        print(token)
         user = None
         try:
             user = User.objects.get(token=token)
@@ -100,6 +95,32 @@ class UserLogoutSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'token',
             'status',
+            'token'
+        )
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(
+        required=True,
+        validators=[UniqueValidator(queryset=User.objects.all())]
+        )
+    firstname = serializers.CharField(
+        required=True,
+        validators=[UniqueValidator(queryset=User.objects.all())]
+        )
+    lastname = serializers.CharField(
+        required=True,
+        validators=[UniqueValidator(queryset=User.objects.all())]
+        )
+    password = serializers.CharField(max_length=8, write_only=True)
+    phone = serializers.CharField(max_length=15, required=False)
+
+    class Meta:
+        model = User
+        fields = (
+            'firstname',
+            'lastname',
+            'email',
+            'password',
+            'phone',
         )
