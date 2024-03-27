@@ -1,6 +1,5 @@
 import React from "react";
 
-import axios from "axios";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
 import ShowcaseContainer from "../components/Utilities/ShowcaseContainer";
@@ -9,6 +8,7 @@ import LargeHeading from "../components/Texts/LargeHeading";
 import ExtraLargeHeading from "../components/Texts/ExtraLargeHeading";
 
 function Dashboard() {
+
     return (
         <div className="relative">
             <div className="bg-showcase h-[130vh] w-full bg-center bg-cover bg-no-repeat relative overflow-x-hidden">
