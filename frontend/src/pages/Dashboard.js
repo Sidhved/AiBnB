@@ -11,7 +11,7 @@ function Dashboard() {
 
     return (
         <div className="relative">
-            <div className="bg-showcase h-[130vh] w-full bg-center bg-cover bg-no-repeat relative overflow-x-hidden">
+            <div className="bg-showcase h-[100vh] w-full bg-center bg-cover bg-no-repeat relative overflow-x-hidden">
                 {/* Overlay */}
                 <div className="h-[100%] w-[100%] bg-black opacity-50 absolute"></div>
 
@@ -95,6 +95,10 @@ function Dashboard() {
                         </div>
                     </ShowcaseContainer>
                 </div>
+            </div>
+
+            <div>
+                
             </div>
         </div>
     );

@@ -7,7 +7,7 @@ import { baseUrl } from "../../api/baseUrl";
 import { userActionTypes } from "../../store/UserReducer/UserActionTypes";
 import TextBox from "../Inputs/TextBox";
 import Button from "../Buttons/Button";
-import Logo from "../../assets/aibnb-logo-final.png";
+import Logo from "../../assets/logo.png";
 
 function LoginForm({ showLoginForm }) {
     // Declare navigation and dispatch instance
@@ -33,43 +33,18 @@ function LoginForm({ showLoginForm }) {
             });
 
             navigate("/dashboard");
-
-
         } catch (error) {
             console.log("error while logging in", error);
         }
     };
 
     return (
-        <div
-            className="space-y-7 w-[100%]"
-            style={{
-                height: "100%", // inherit the total height of the parent container
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center", // align the form to the center of the div
-            }}
-        >
+        <div className="space-y-7 w-[70%]">
             {/* Form heading */}
-            <div className="space-y-7 text-center">
+            <div className="space-y-7">
                 <div>
-                    {/* Logo div */}
-                    <div className="flex items-center justify-center">
-                        <img
-                            src={Logo}
-                            style={{ height: "100px", width: "100px" }}
-                        />
-                    </div>
-
                     {/* Heading for the form */}
-                    <h1 className="text-4xl text-gray-700">Log in</h1>
-                </div>
-
-                {/* Caption */}
-                <div>
-                    <span className="text-gray-700">
-                        Please login using your email address and password:
-                    </span>
+                    <h1 className="text-3xl">Log in</h1>
                 </div>
             </div>
 
@@ -98,18 +73,14 @@ function LoginForm({ showLoginForm }) {
                     <Button label="Login" onClick={onLogin} />
                 </div>
 
-                {/* Horizontal Line */}
-                <div>
-                    <div style={{ height: "2px" }} className="bg-gray-200" />
-                </div>
 
                 {/* Log In Link */}
                 <div className="text-center">
-                    <span className="text-gray-700 text-xs">
+                    <span className="text-md text-gray-400">
                         Don't have an account?{" "}
                         <button
                             onClick={showLoginForm}
-                            className="text-blue-500"
+                            className="text-blue-500 underline"
                         >
                             Sign Up
                         </button>

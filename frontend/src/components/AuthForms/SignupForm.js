@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import TextBox from "../Inputs/TextBox";
 import Button from "../Buttons/Button";
-import Logo from "../../assets/aibnb-logo-final.png";
 import axios from "axios";
 import { baseUrl } from "../../api/baseUrl";
 
-function SignupForm({ showLoginForm }) {
+function SignupForm({ showLoginForm, onSuccesfulSignUp }) {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
@@ -23,6 +22,10 @@ function SignupForm({ showLoginForm }) {
                 phone: phone,
             });
 
+            onSuccesfulSignUp();
+
+            alert("Account Created Succesfully!");
+
         } catch (error) {
             console.log("error while creating account", error);
         }
@@ -30,29 +33,12 @@ function SignupForm({ showLoginForm }) {
 
     return (
         <div
-            className="space-y-7"
-            style={{
-                height: "100%", // inherit the total height of the parent container
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center", // align the form to the center of the div
-            }}
-        >
+            className="space-y-7 flex flex-col w-[70%]"        >
             {/* Form heading */}
-            <div className="space-y-7 text-center">
+            <div className="space-y-3">
                 <div>
-                    {/* Logo div */}
-                    <div className="flex items-center justify-center">
-                        <img
-                            src={Logo}
-                            style={{ height: "100px", width: "100px" }}
-                        />
-                    </div>
-
                     {/* Heading for the form */}
-                    <h1 className="text-4xl text-gray-700">
-                        Create your account
-                    </h1>
+                    <h1 className="text-2xl">Sign Up</h1>
                 </div>
 
                 {/* Caption */}
@@ -66,12 +52,14 @@ function SignupForm({ showLoginForm }) {
             {/* Input boxes */}
             <div className="space-y-7">
                 {/* First Name & Last Name */}
-                <div className="flex items-center space-x-5">
+                <div>
                     <TextBox
                         placeholder="First Name"
                         type="text"
                         onChange={(e) => setFirstName(e.target.value)}
                     />
+                </div>
+                <div>
                     <TextBox
                         placeholder="Last Name"
                         type="text"
@@ -100,7 +88,7 @@ function SignupForm({ showLoginForm }) {
                 {/* Terms of Service and policy section */}
                 <div className="flex items-center space-x-3">
                     <input type="checkbox" />
-                    <span className="text-xs text-gray-700">
+                    <span className="text-md text-gray-600">
                         I agree to the{" "}
                         <button className="text-blue-500">
                             Terms of Service
@@ -119,12 +107,12 @@ function SignupForm({ showLoginForm }) {
 
                 {/* Horizontal Line */}
                 <div>
-                    <div style={{ height: "2px" }} className="bg-gray-200" />
+                    <div className="bg-gray-200 h-[2px]" />
                 </div>
 
                 {/* Log In Link */}
                 <div className="text-center">
-                    <span className="text-gray-700 text-xs">
+                    <span className="text-md">
                         Joined us before?{" "}
                         <button
                             onClick={showLoginForm}

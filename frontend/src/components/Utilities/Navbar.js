@@ -3,7 +3,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import Logo from "../../assets/aibnb-logo-final.png";
+import Logo from "../../assets/logo.png";
 import { baseUrl } from "../../api/baseUrl";
 
 const NAV_LINKS = [
@@ -45,7 +45,6 @@ function Navbar() {
         // if user clicked on nav label is logout
         if (navLabel === "Logout") {
             try {
-
                 // logout user with token
                 await axios.post(`${baseUrl}/auth/logout/`, {
                     token: auth_token,
@@ -60,11 +59,13 @@ function Navbar() {
     };
 
     return (
-        <div className="h-[100px] w-[100vw] flex flex-row items-center justify-center">
+        <div className="h-[100px] w-[100vw] flex flex-ro w items-center justify-center">
             <div className="flex-[0.7] flex flex-row items-center justify-between">
                 {/* Nav brand */}
-                <div className="flex flex-row items-center">
-                    <img src={Logo} className="h-[70px] w-[70px]" />
+                <div className="flex flex-row items-center space-x-3">
+                    <div className="bg-white rounded-full">
+                        <img src={Logo} className="h-[40px] w-[40px]" />
+                    </div>
                     <h1 className="text-3xl text-white font-bold font-[pacifico]">
                         AiBnB
                     </h1>
