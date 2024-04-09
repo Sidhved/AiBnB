@@ -2,8 +2,8 @@ import React from "react";
 
 function ShowcaseContainer({ children }) {
     return (
-        <div className="flex flex-row justify-center h-[80vh] items-center overflow-auto">
-            <div className="flex-[0.7] space-y-5">
+        <div className="flex flex-row h-[80vh] justify-center">
+            <div className="flex-[0.7]">
                 {/* Render the child components */}
                 {children}
             </div>

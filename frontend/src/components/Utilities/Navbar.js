@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import Logo from "../../assets/logo.png";
 import { baseUrl } from "../../api/baseUrl";
+import NavLink from "../Buttons/NavLink";
 
 const NAV_LINKS = [
     {
@@ -74,13 +75,7 @@ function Navbar() {
                 <div className="flex flex-row space-x-10">
                     {/* Nav items */}
                     {NAV_LINKS.map((link) => (
-                        <button
-                            onClick={() => handleNavClick(link.label)}
-                            key={link.id}
-                            className="cursor-pointer text-white bg-transparent"
-                        >
-                            {link.label}
-                        </button>
+                        <NavLink navLabel={link.label} />
                     ))}
                 </div>
             </div>

@@ -1,13 +1,20 @@
-import React from "react";
+import classes from "./Dashboard.module.css";
 
-import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import React, { useState } from "react";
+
+import { ArrowRightIcon } from "@heroicons/react/24/outline";
 
 import ShowcaseContainer from "../components/Utilities/ShowcaseContainer";
 import Navbar from "../components/Utilities/Navbar";
 import LargeHeading from "../components/Texts/LargeHeading";
 import ExtraLargeHeading from "../components/Texts/ExtraLargeHeading";
+import PanelButton from "../components/Dashboard/PanelButton";
+import { destinations } from "../constants/destinationData";
 
 function Dashboard() {
+    const [showBuildLabel, setShowBuildLabel] = useState(false);
+
+    const [showDestinations, setShowDestinations] = useState(false);
 
     return (
         <div className="relative">
@@ -20,7 +27,7 @@ function Dashboard() {
 
                     {/* Showcase */}
                     <ShowcaseContainer>
-                        <div className="h-[100%] space-y-10 mb-20">
+                        <div className="space-y-10 mb-20">
                             <div>
                                 <LargeHeading>TRIPS WITH US</LargeHeading>
                             </div>
@@ -33,73 +40,77 @@ function Dashboard() {
                         </div>
 
                         {/* Input Box */}
-                        <div className="h-[100px] w-[100%] bg-white rounded-full shadow-xl flex flex-row py-5 px-20 items-center space-x-10">
+                        <div className="h-[100px] w-[100%] bg-white rounded-full shadow-xl flex flex-row items-center space-x-2">
                             {/* Destination */}
-                            <div className="border-r-2 flex-1 h-[80%] flex flex-col justify-center">
-                                <div className="flex flex-row items-center space-x-1">
-                                    <span className="text-lg">Destination</span>
-                                    <ChevronDownIcon className="h-6 w-6 text-blue-600" />
-                                </div>
+                            <div className="flex flex-1 h-[100%] relative">
+                                <PanelButton
+                                    onClick={() =>
+                                        setShowDestinations(!showDestinations)
+                                    }
+                                    panelLabel="Destination"
+                                    panelValue="New York, NY"
+                                />
 
-                                {/* Value */}
-                                <div>
-                                    <span className="text-gray-600">
-                                        New York, NY
-                                    </span>
-                                </div>
+                                {/* Destination Suggestions Modal */}
+                                {showDestinations && (
+                                    <div className="absolute bg-white w-[300px] p-5 rounded-xl shadow-lg flex flex-col top-[110%]">
+                                        {destinations.map((destination) => (
+                                            <button className="cursor-pointer text-left py-5">
+                                                {destination.name}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                             {/* Check In Date */}
-                            <div className="flex-1 border-r-2 h-[80%] flex flex-col justify-center ">
-                                <div className="flex flex-row items-center space-x-1">
-                                    <span className="text-lg">Check In</span>
-                                    <ChevronDownIcon className="h-6 w-6 text-blue-600" />
-                                </div>
-
-                                {/* Value */}
-                                <div>
-                                    <span className="text-gray-600">
-                                        24 Sept 2023
-                                    </span>
-                                </div>
+                            <div className="flex flex-2 h-[100%]">
+                                <PanelButton
+                                    panelLabel="Check in Date"
+                                    isDate={true}
+                                />
                             </div>
-
-                            {/* CHeck out Date */}
-                            <div className="flex-1 border-r-2 h-[80%] flex flex-col justify-center">
-                                <div className="flex flex-row items-center space-x-1">
-                                    <span className="text-lg">Check Out</span>
-                                    <ChevronDownIcon className="h-6 w-6 text-blue-600" />
-                                </div>
-
-                                {/* Value */}
-                                <div>
-                                    <span className="text-gray-600">
-                                        24 Sept 2023
-                                    </span>
-                                </div>
+                            {/* Check out Date */}
+                            <div className="flex flex-2 h-[100%]">
+                                <PanelButton
+                                    panelLabel="Check out Date"
+                                />
+                                
                             </div>
-
                             {/* Guests */}
-                            <div className="flex-1 flex-col justify-center">
-                                <div className="flex flex-row items-center space-x-1">
-                                    <span className="text-lg">Guests</span>
-                                    <ChevronDownIcon className="h-6 w-6 text-blue-600" />
-                                </div>
+                            <div className="flex flex-2 h-[100%]">
+                                <PanelButton
+                                    panelLabel="Guests"
+                                    panelValue="2"
+                                />
+                            </div>
 
-                                {/* Value */}
-                                <div>
-                                    <span className="text-gray-600">
-                                        2 Guests
+                            {/* Let's Go button */}
+                            <div className="flex flex-[0.5] h-[100%] flex-row items-center justify-end px-5">
+                                <button
+                                    onMouseOver={() => setShowBuildLabel(true)}
+                                    onMouseLeave={() =>
+                                        setShowBuildLabel(false)
+                                    }
+                                    className="bg-blue-600 h-10 px-3 rounded-full cursor-pointer flex flex-row items-center justify-center"
+                                >
+                                    <span
+                                        className={`text-white ${
+                                            showBuildLabel
+                                                ? classes.showBuildLabel
+                                                : classes.buildLabel
+                                        }`}
+                                    >
+                                        Build!
                                     </span>
-                                </div>
+                                    <ArrowRightIcon color="#fff" height={20} />
+                                </button>
                             </div>
                         </div>
                     </ShowcaseContainer>
                 </div>
             </div>
 
-            <div>
-                
-            </div>
+            <div className="h-[60vh] bg-white"></div>
         </div>
     );
 }

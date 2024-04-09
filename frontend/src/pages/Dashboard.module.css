@@ -1,0 +1,13 @@
+.buildLabel {
+  opacity: 0; /* Start fully transparent */
+  max-width: 0; /* Prevent the text from taking up space initially */
+  overflow: hidden; /* Prevent the content from spilling outside */
+  transition: opacity 0.4s ease, max-width 0.4s ease; /* Smooth transitions for opacity and max-width */
+  white-space: nowrap; /* Ensure the text does not wrap */
+}
+
+.showBuildLabel {
+  opacity: 1; /* Fully visible */
+  max-width: 100px; /* Adjust as needed to fit the text */
+  transition: opacity 0.4s ease, max-width 0.4s ease;
+}
