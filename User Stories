@@ -53,3 +53,11 @@ User Stories:
     ○ The platform is accessible and functional on desktops, laptops, tablets, and smartphones.
     ○ Content and layout adapt seamlessly to different screen sizes and orientations.
     ○ Users can navigate and interact with the platform comfortably on any device.
+
+8. Finalizing Language Model for Itinerary Planning
+  ● As a developer, I want to efficiently finalize the Language Model (LLM) to be used in itinerary planning by thoroughly 
+    testing various options and selecting the most suitable one based on defined criteria.
+  ● Acceptance Criteria:
+    ○ Evaluate and compare multiple language models suitable for itinerary planning, considering factors such as performance, accuracy, versatility, and computational efficiency.
+    ○ Test each language model with a diverse range of travel scenarios, including different types of destinations, accommodations, activities, and transportation options.
+    ○ Iterate and refine the language model based on user feedback and testing results, aiming to enhance its effectiveness, reliability, and user experience.
