@@ -3,6 +3,7 @@ import TextBox from "../Inputs/TextBox";
 import Button from "../Buttons/Button";
 import axios from "axios";
 import { baseUrl } from "../../api/baseUrl";
+import LargeHeading from "../Texts/LargeHeading";
 
 function SignupForm({ showLoginForm, onSuccesfulSignUp }) {
     const [firstName, setFirstName] = useState("");
@@ -33,17 +34,17 @@ function SignupForm({ showLoginForm, onSuccesfulSignUp }) {
 
     return (
         <div
-            className="space-y-7 flex flex-col w-[70%]"        >
+            className="space-y-7 flex flex-col w-[50%]"        >
             {/* Form heading */}
             <div className="space-y-3">
                 <div>
                     {/* Heading for the form */}
-                    <h1 className="text-2xl">Sign Up</h1>
+                    <LargeHeading>SIGN UP</LargeHeading>
                 </div>
 
                 {/* Caption */}
                 <div>
-                    <span className="text-gray-700">
+                    <span className="text-gray-300">
                         Hello there! Let's create your account.
                     </span>
                 </div>
@@ -88,7 +89,7 @@ function SignupForm({ showLoginForm, onSuccesfulSignUp }) {
                 {/* Terms of Service and policy section */}
                 <div className="flex items-center space-x-3">
                     <input type="checkbox" />
-                    <span className="text-md text-gray-600">
+                    <span className="text-md text-gray-300">
                         I agree to the{" "}
                         <button className="text-blue-500">
                             Terms of Service
@@ -101,18 +102,14 @@ function SignupForm({ showLoginForm, onSuccesfulSignUp }) {
                 </div>
 
                 {/* Sign up button */}
-                <div>
+                <div className="flex flex-row">
                     <Button label="Signup" onClick={onSignup} />
                 </div>
 
-                {/* Horizontal Line */}
-                <div>
-                    <div className="bg-gray-200 h-[2px]" />
-                </div>
 
                 {/* Log In Link */}
                 <div className="text-center">
-                    <span className="text-md">
+                    <span className="text-md text-white">
                         Joined us before?{" "}
                         <button
                             onClick={showLoginForm}

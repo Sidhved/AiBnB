@@ -7,7 +7,8 @@ import { baseUrl } from "../../api/baseUrl";
 import { userActionTypes } from "../../store/UserReducer/UserActionTypes";
 import TextBox from "../Inputs/TextBox";
 import Button from "../Buttons/Button";
-import Logo from "../../assets/logo.png";
+import Logo from "../../assets/logo.jpg";
+import LargeHeading from "../Texts/LargeHeading";
 
 function LoginForm({ showLoginForm }) {
     // Declare navigation and dispatch instance
@@ -39,12 +40,12 @@ function LoginForm({ showLoginForm }) {
     };
 
     return (
-        <div className="space-y-7 w-[70%]">
+        <div className="space-y-7 w-[50%]">
             {/* Form heading */}
             <div className="space-y-7">
                 <div>
                     {/* Heading for the form */}
-                    <h1 className="text-3xl">Log in</h1>
+                    <LargeHeading>LOG IN</LargeHeading>
                 </div>
             </div>
 

@@ -1,6 +1,5 @@
 import classes from "./PanelButton.module.css";
 import React, { useState } from "react";
-import DatePicker from "react-datepicker";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
 function PanelButton({ panelLabel, panelValue, isDate }) {
@@ -10,7 +9,7 @@ function PanelButton({ panelLabel, panelValue, isDate }) {
 
     return (
         <div
-            className={`h-[100%] w-[100%] rounded-full flex flex-col justify-center px-10`}
+            className={`h-[100%] w-[100%] rounded-full flex flex-col justify-center px-5`}
         >
             <div className="flex flex-row items-center space-x-1">
                 <span className="text-lg">{panelLabel}</span>
@@ -19,13 +18,15 @@ function PanelButton({ panelLabel, panelValue, isDate }) {
 
             {/* Value */}
             <div>
-                {!isDate && (
+                {!isDate ? (
                     <input
                         placeholder="Search Destination"
                         value={inputValue}
                         className="outline-none border-none"
                         onChange={(e) => setInputValue(e.target.value)}
                     />
+                ) : (
+                    <input type="date" />
                 )}
             </div>
         </div>

@@ -3,7 +3,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import Logo from "../../assets/logo.png";
+import Logo from "../../assets/logo.jpg";
 import { baseUrl } from "../../api/baseUrl";
 import NavLink from "../Buttons/NavLink";
 
@@ -67,7 +67,7 @@ function Navbar() {
                     <div className="bg-white rounded-full">
                         <img src={Logo} className="h-[40px] w-[40px]" />
                     </div>
-                    <h1 className="text-3xl text-white font-bold font-[pacifico]">
+                    <h1 className="text-3xl text-white font-bold font-[arizonia]">
                         AiBnB
                     </h1>
                 </div>
