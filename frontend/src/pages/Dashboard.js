@@ -15,11 +15,14 @@ import Caption from "../components/Texts/Caption";
 import { recommendedTripsData } from "../constants/recommendedTripsData";
 import TripCard from "../components/Cards/TripCard";
 import Button from "../components/Buttons/Button";
+import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
     const [showBuildLabel, setShowBuildLabel] = useState(false);
 
     const [showDestinations, setShowDestinations] = useState(false);
+
+    const navigate = useNavigate();
 
     return (
         <div className="relative ">
@@ -46,7 +49,7 @@ function Dashboard() {
 
                             <div className="flex flex-col items-center">
                                 <div className="w-[50%]">
-                                    <Button label="CREATE ONE NOW!" />
+                                    <Button onClick={() => navigate("/createItinerary")} label="CREATE ONE NOW!" />
                                 </div>
                             </div>
                         </div>

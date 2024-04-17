@@ -1,4 +1,6 @@
+import CreateItinerary from "../pages/CreateItinerary";
 import Dashboard from "../pages/Dashboard";
+import Profile from "../pages/Profile";
 import PrivateLayout from "./PrivateLayout";
 
 const { createBrowserRouter } = require("react-router-dom");
@@ -15,6 +17,14 @@ const router = createBrowserRouter([
         element: <PrivateLayout />,
         children: [{ path: "/dashboard", element: <Dashboard /> }],
     },
+    {
+        path: "/profile",
+        element: <Profile />                
+    },
+    {
+        path: "/createItinerary",
+        element: <CreateItinerary />
+    }
 ]);
 
 export default router;
