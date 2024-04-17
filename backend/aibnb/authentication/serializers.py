@@ -1,126 +1,106 @@
-from django.db.models import Q # for queries
 from rest_framework import serializers
-from rest_framework.validators import UniqueValidator
-from .models import User
-from django.core.exceptions import ValidationError
-from uuid import uuid4
-
+from authentication.models import User
+from django.utils.encoding import force_bytes, smart_str, DjangoUnicodeDecodeError
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 class UserSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(
-        required=True,
-        validators=[UniqueValidator(queryset=User.objects.all())]
-        )
-    firstname = serializers.CharField(
-        required=True,
-        validators=[UniqueValidator(queryset=User.objects.all())]
-        )
-    lastname = serializers.CharField(
-        required=True,
-        validators=[UniqueValidator(queryset=User.objects.all())]
-        )
-    password = serializers.CharField(max_length=8, write_only=True)
+    password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
 
     class Meta:
         model = User
-        fields = ('id',  # 'id' is added to the fields
-            'firstname',
-            'lastname',
-            'email',
-            'password',
-            'phone',
-        )
+        fields = ['email', 'first_name', 'last_name', 'phone', 'password', 'password2']
+        extra_kwargs = {
+            'password2': {'write_only': True}
+        }
+
+    def validate(self, data):
+        if data['password'] != data['password2']:
+            raise serializers.ValidationError({'password': 'Passwords and Confirm Password must match.'})
+        return data
+
+    def create(self, validated_data):
+        return User.objects.create_user(**validated_data)
 
 
 class UserLoginSerializer(serializers.ModelSerializer):
-    # to accept either username or email
-    user_id = serializers.CharField()
-    password = serializers.CharField()
-    token = serializers.CharField(read_only=True)
-
-    def validate(self, data):
-        # user,email,password validator
-        user_id = data.get("user_id", None)
-        password = data.get("password", None)
-        if not user_id and not password:
-            raise ValidationError("Details not entered.")
-
-        user = User.objects.filter(
-            Q(email=user_id) &
-            Q(password=password)
-            ).distinct()
-        if not user.exists():
-            raise ValidationError("User credentials are not correct.")
-        user = User.objects.get(email=user_id)
-        if user.ifLogged:
-            raise ValidationError("User already logged in.")
-        user.ifLogged = True
-        data['token'] = uuid4()
-        user.token = data['token']
-        user.save()
-        return data
+    email = serializers.EmailField(max_length=255, min_length=3)
 
     class Meta:
         model = User
-        fields = (
-            'user_id',
-            'password',
-            'token',
-        )
-
-        read_only_fields = (
-            'token',
-        )
+        fields = ['email', 'password']
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
 
 
-class UserLogoutSerializer(serializers.ModelSerializer):
-    token = serializers.CharField()
-    status = serializers.CharField(required=False, read_only=True)
+class UserProfilesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'first_name', 'last_name', 'phone']
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    password = serializers.CharField(max_length=255, min_length=6, style={'input_type': 'password'}, write_only=True)
+    password2 = serializers.CharField(max_length=255, min_length=6, style={'input_type': 'password'}, write_only=True)
+
+
+    class Meta:
+        fields = ['password', 'password2']
 
     def validate(self, data):
-        token = data.get("token", None)
-        user = None
+        user = self.context['user']
+        if data['password'] != data['password2']:
+            raise serializers.ValidationError({'password': 'Passwords and Confirm Password must match.'})
+        user.set_password(data['password'])
+        user.save()
+        return data
+
+
+class SendPasswordResetEmailSerializer(serializers.Serializer):
+    email = serializers.EmailField(max_length=255, min_length=3)
+
+    class Meta:
+        fields = ['email']
+
+    def validate(self, data):
+        email = data['email']
+        if not User.objects.filter(email=email).exists():
+            raise serializers.ValidationError({'email': 'User with this email does not exist.'})
+        else:
+            user = User.objects.get(email=email)
+            uidb64 = urlsafe_base64_encode(force_bytes(user.id))
+            token = PasswordResetTokenGenerator().make_token(user)
+            link = 'http://localhost:3000/auth/reset-password/' + uidb64 + '/' + token
+            body = 'Click the link below to reset your password \n' + link
+            data = {
+                'subject': 'Password Reset',
+                'body': body,
+                'to_email': user.email,
+            }
+            print("Link: ", link)
+            return data
+
+class UserPasswordResetSerializer(serializers.Serializer):
+    password = serializers.CharField(max_length=255, min_length=6, style={'input_type': 'password'}, write_only=True)
+    password2 = serializers.CharField(max_length=255, min_length=6, style={'input_type': 'password'}, write_only=True)
+
+    class Meta:
+        fields = ['password', 'password2']
+
+    def validate(self, data):
+        uid = self.context['uid']
+        token = self.context['token']
+        id = smart_str(urlsafe_base64_decode(uid))
+        user = User.objects.get(id=id)
         try:
-            user = User.objects.get(token=token)
-            if not user.ifLogged:
-                raise ValidationError("User is not logged in.")
-        except Exception as e:
-            raise ValidationError(str(e))
-        user.ifLogged = False
-        user.token = ""
-        user.save()
-        data['status'] = "User is logged out."
-        return data
-
-    class Meta:
-        model = User
-        fields = (
-            'status',
-            'token'
-        )
-
-class UserUpdateSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(
-        required=True,
-        validators=[UniqueValidator(queryset=User.objects.all())]
-        )
-    firstname = serializers.CharField(
-        required=True,
-        validators=[UniqueValidator(queryset=User.objects.all())]
-        )
-    lastname = serializers.CharField(
-        required=True,
-        validators=[UniqueValidator(queryset=User.objects.all())]
-        )
-    password = serializers.CharField(max_length=8, write_only=True)
-    phone = serializers.CharField(max_length=15, required=False)
-
-    class Meta:
-        model = User
-        fields = (
-            'firstname',
-            'lastname',
-            'email',
-            'password',
-            'phone',
-        )
+            if data['password'] != data['password2']:
+                raise serializers.ValidationError({'password': 'Passwords and Confirm Password must match.'})
+            if not PasswordResetTokenGenerator().check_token(user, token):
+                raise serializers.ValidationError({'error': 'The reset link is invalid'}, status=401)
+            user.set_password(data['password'])
+            user.save()
+            return data
+        except DjangoUnicodeDecodeError as identifier:
+            PasswordResetTokenGenerator().check_token(user, token)
+            raise serializers.ValidationError({'error': 'The reset link is invalid'}, status=401)
