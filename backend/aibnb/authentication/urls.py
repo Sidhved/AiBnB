@@ -1,11 +1,10 @@
 from django.urls import path
-from .views import Record, Login, Logout, Update, UserListView, UserDetailView
-
+from authentication.views import *
 urlpatterns = [
-    path('addUser/', Record.as_view(), name="register"),
-    path('login/', Login.as_view(), name="login"),
-    path('logout/', Logout.as_view(), name="logout"),
-    path('update/<int:pk>/', Update.as_view(), name="update"),
-    path('users/', UserListView.as_view(), name='user-list'),
-    path('users/<int:pk>/', UserDetailView.as_view(), name='user-detail'),
+    path('register/', UserRegistrationView.as_view(), name='register'),
+    path('login/', UserLoginView.as_view(), name='login'),
+    path('profile/', UserProfileView.as_view(), name='profile'),
+    path('change-password/', ChangePasswordView.as_view(), name='change-password'),
+    path('send-password-reset-email/', SendPasswordResetEmailView.as_view(), name='send-reset-email'),
+    path('reset-password/<uid>/<token>/', UserPasswordResetView.as_view(), name='reset-password'),
 ]
