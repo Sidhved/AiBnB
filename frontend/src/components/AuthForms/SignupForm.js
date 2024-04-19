@@ -1,40 +1,64 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
+import { authQueries } from "../../api/authQueries";
 import TextBox from "../Inputs/TextBox";
 import Button from "../Buttons/Button";
-import axios from "axios";
-import { baseUrl } from "../../api/baseUrl";
 import LargeHeading from "../Texts/LargeHeading";
 
-function SignupForm({ showLoginForm, onSuccesfulSignUp }) {
+function SignupForm({ showLoginForm }) {
+    // STATES
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [phone, setPhone] = useState("123456");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [phone, setPhone] = useState("12345");
+    const [isLoading, setIsLoading] = useState(false); // state to show an actiivty indicator during signup
+
+    // HOOKS
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     // function to handle signup
     const onSignup = async () => {
-        try {
-            const response = await axios.post(`${baseUrl}/auth/addUser/`, {
-                email: email,
-                password: password,
-                firstname: firstName,
-                lastname: lastName,
-                phone: phone,
-            });
+        // start the activity indicator
+        setIsLoading(true);
 
-            onSuccesfulSignUp();
+        const isUserRegistered = await authQueries.registerUser(
+            email,
+            password,
+            confirmPassword,
+            firstName,
+            lastName,
+            phone,
+            dispatch
+        );
 
-            alert("Account Created Succesfully!");
-
-        } catch (error) {
-            console.log("error while creating account", error);
+        
+        // if user has registered
+        if (isUserRegistered === true) {
+            navigate("/dashboard");
+        } else {
+            // reset all states
+            resetStates();
         }
+        // stop the loading indicator
+        setIsLoading(false);
+    };
+
+    // function to reset the states
+    const resetStates = () => {
+        setFirstName("");
+        setLastName("");
+        setEmail("");
+        setPassword("");
+        setConfirmPassword("");
     };
 
     return (
-        <div
-            className="space-y-7 flex flex-col w-[50%]"        >
+        <div className="space-y-7 flex flex-col w-[50%]">
             {/* Form heading */}
             <div className="space-y-3">
                 <div>
@@ -72,7 +96,7 @@ function SignupForm({ showLoginForm, onSuccesfulSignUp }) {
                 <div>
                     <TextBox
                         placeholder="Email address"
-                        type="email"
+                        type="text"
                         onChange={(e) => setEmail(e.target.value)}
                     />
                 </div>
@@ -83,6 +107,15 @@ function SignupForm({ showLoginForm, onSuccesfulSignUp }) {
                         placeholder="Password"
                         type="password"
                         onChange={(e) => setPassword(e.target.value)}
+                    />
+                </div>
+
+                {/* Confirm Password */}
+                <div>
+                    <TextBox
+                        placeholder="Confirm Password"
+                        type="password"
+                        onChange={(e) => setConfirmPassword(e.target.value)}
                     />
                 </div>
 
@@ -105,7 +138,6 @@ function SignupForm({ showLoginForm, onSuccesfulSignUp }) {
                 <div className="flex flex-row">
                     <Button label="Signup" onClick={onSignup} />
                 </div>
-
 
                 {/* Log In Link */}
                 <div className="text-center">
