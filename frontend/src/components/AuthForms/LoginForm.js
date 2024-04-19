@@ -1,42 +1,42 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { baseUrl } from "../../api/baseUrl";
-import { userActionTypes } from "../../store/UserReducer/UserActionTypes";
 import TextBox from "../Inputs/TextBox";
 import Button from "../Buttons/Button";
-import Logo from "../../assets/logo.jpg";
 import LargeHeading from "../Texts/LargeHeading";
+import { authQueries } from "../../api/authQueries";
 
 function LoginForm({ showLoginForm }) {
-    // Declare navigation and dispatch instance
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-
+    // STATES
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    // function to handle login
+    // HOOKS
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    // function to login user
     const onLogin = async () => {
-        try {
-            const response = await axios.post(`${baseUrl}/auth/login/`, {
-                user_id: email,
-                password: password,
-            });
+        const isUserLoggedIn = await authQueries.loginUser(
+            email,
+            password,
+            dispatch
+        );
 
-            const { token } = response.data;
-
-            dispatch({
-                type: userActionTypes.SET_AUTH_TOKEN,
-                payload: { token: token },
-            });
-
+        // if user is logged in
+        if (isUserLoggedIn === true) {
             navigate("/dashboard");
-        } catch (error) {
-            console.log("error while logging in", error);
+        } else {
+            // reset the input states
+            resetStates();
         }
+    };
+
+    // function to reset states
+    const resetStates = () => {
+        setEmail("");
+        setPassword("");
     };
 
     return (
@@ -54,8 +54,9 @@ function LoginForm({ showLoginForm }) {
                 {/* Email address */}
                 <div>
                     <TextBox
+                        value={email}
                         placeholder="Email address"
-                        type="email"
+                        type="text"
                         onChange={(e) => setEmail(e.target.value)}
                     />
                 </div>
@@ -63,6 +64,7 @@ function LoginForm({ showLoginForm }) {
                 {/* Password */}
                 <div>
                     <TextBox
+                        value={password}
                         placeholder="Password"
                         type="password"
                         onChange={(e) => setPassword(e.target.value)}
@@ -73,7 +75,6 @@ function LoginForm({ showLoginForm }) {
                 <div>
                     <Button label="Login" onClick={onLogin} />
                 </div>
-
 
                 {/* Log In Link */}
                 <div className="text-center">
