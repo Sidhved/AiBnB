@@ -42,7 +42,7 @@ function Navbar() {
     const { auth_token } = useSelector((state) => state.UserReducer);
 
     // Handle event when user presses any nav link
-    const handleNavClick = async (navLabel) => {
+    const handleNavClick = async (navLabel, navPath) => {
         // if user clicked on nav label is logout
         if (navLabel === "Logout") {
             try {
@@ -56,6 +56,9 @@ function Navbar() {
             } catch (error) {
                 console.log("error", error);
             }
+        }
+        else {
+            navigate(navPath); // Navigate based on the path
         }
     };
 
@@ -75,7 +78,11 @@ function Navbar() {
                 <div className="flex flex-row space-x-10">
                     {/* Nav items */}
                     {NAV_LINKS.map((link) => (
-                        <NavLink navLabel={link.label} />
+                        <NavLink
+                        key={link.id}
+                        navLabel={link.label}
+                        onClick={() => handleNavClick(link.label, link.linkTo)}
+                    />
                     ))}
                 </div>
             </div>
