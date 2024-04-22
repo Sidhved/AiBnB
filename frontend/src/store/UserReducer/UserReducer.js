@@ -30,6 +30,13 @@ export const UserReducer = (state = initialState, action) => {
                 refreshToken: refreshToken,
             };
         }
+        case userActionTypes.SET_USER_DETAILS:
+            return {
+                ...state,
+                email: action.payload.email,
+                firstName: action.payload.firstName,
+                lastName: action.payload.lastName,
+            };
 
         case userActionTypes.SET_PROFILE_DATA: {
             // get profile data
