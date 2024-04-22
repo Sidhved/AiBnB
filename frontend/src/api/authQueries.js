@@ -51,8 +51,6 @@ export const authQueries = {
 
     // login user
     loginUser: async (email, password, dispatch) => {
-        console.log("email", email);
-
         // user data to be sent (request body)
         const userData = {
             email: email,
@@ -81,6 +79,32 @@ export const authQueries = {
             return true;
         } catch (error) {
             return error;
+        }
+    },
+
+    // get profile
+    getProfile: async (accessToken, profileDataFromRedux, dispatch) => {
+        // If profile data is not present in redux
+        if (!profileDataFromRedux) {
+            try {
+                // pass the access token in the authorization header
+                const response = await axios.get(`${baseUrl}/auth/profile/`, {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                });
+
+                // get profile data
+                const profileData = response.data.data;
+
+                // dispatch the response data to redux
+                dispatch({
+                    type: userActionTypes.SET_PROFILE_DATA,
+                    payload: { profileData: profileData },
+                });
+            } catch (error) {
+                console.error("Error while fetching getting profile", error);
+            }
         }
     },
 };
