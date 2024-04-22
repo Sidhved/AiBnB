@@ -1,89 +1,159 @@
-import React from "react";
-import TextBox from "../Utilities/TextBox";
-import Button from "../Utilities/Button";
-import Logo from "../../assets/aibnb-logo-final.png";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
+import { authQueries } from "../../api/authQueries";
+import TextBox from "../Inputs/TextBox";
+import Button from "../Buttons/Button";
+import LargeHeading from "../Texts/LargeHeading";
 
 function SignupForm({ showLoginForm }) {
-  return (
-    <div
-      className="space-y-7"
-      style={{
-        height: "100%", // inherit the total height of the parent container
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center", // align the form to the center of the div
-      }}
-    >
-      {/* Form heading */}
-      <div className="space-y-7 text-center">
-        <div>
-          {/* Logo div */}
-          <div className="flex items-center justify-center">
-            <img src={Logo} style={{ height: "100px", width: "100px" }} />
-          </div>
+    // STATES
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [phone, setPhone] = useState("12345");
+    const [isLoading, setIsLoading] = useState(false); // state to show an actiivty indicator during signup
 
-          {/* Heading for the form */}
-          <h1 className="text-4xl text-gray-700">Create your account</h1>
-        </div>
+    // HOOKS
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-        {/* Caption */}
-        <div>
-          <span className="text-gray-700">
-            Hello there! Let's create your account.
-          </span>
-        </div>
-      </div>
+    // function to handle signup
+    const onSignup = async () => {
+        // start the activity indicator
+        setIsLoading(true);
 
-      {/* Input boxes */}
-      <div className="space-y-7">
-        {/* First Name & Last Name */}
-        <div className="flex items-center space-x-5">
-          <TextBox placeholder="First Name" />
-          <TextBox placeholder="Last Name" />
-        </div>
+        const isUserRegistered = await authQueries.registerUser(
+            email,
+            password,
+            confirmPassword,
+            firstName,
+            lastName,
+            phone,
+            dispatch
+        );
 
-        {/* Email address */}
-        <div>
-          <TextBox placeholder="Email address" />
-        </div>
+        
+        // if user has registered
+        if (isUserRegistered === true) {
+            navigate("/dashboard");
+        } else {
+            // reset all states
+            resetStates();
+        }
+        // stop the loading indicator
+        setIsLoading(false);
+    };
 
-        {/* Password */}
-        <div>
-          <TextBox placeholder="Password" />
-        </div>
+    // function to reset the states
+    const resetStates = () => {
+        setFirstName("");
+        setLastName("");
+        setEmail("");
+        setPassword("");
+        setConfirmPassword("");
+    };
 
-        {/* Terms of Service and policy section */}
-        <div className="flex items-center space-x-3">
-          <input type="checkbox" />
-          <span className="text-xs text-gray-700">
-            I agree to the{" "}
-            <button className="text-blue-500">Terms of Service</button> and{" "}
-            <button className="text-blue-500">Privacy Policy</button>
-          </span>
-        </div>
+    return (
+        <div className="space-y-7 flex flex-col w-[50%]">
+            {/* Form heading */}
+            <div className="space-y-3">
+                <div>
+                    {/* Heading for the form */}
+                    <LargeHeading>SIGN UP</LargeHeading>
+                </div>
 
-        {/* Sign up button */}
-        <div>
-          <Button label="Signup" />
-        </div>
+                {/* Caption */}
+                <div>
+                    <span className="text-gray-300">
+                        Hello there! Let's create your account.
+                    </span>
+                </div>
+            </div>
 
-        {/* Horizontal Line */}
-        <div>
-          <div style={{ height: "2px" }} className="bg-gray-200" />
-        </div>
+            {/* Input boxes */}
+            <div className="space-y-7">
+                {/* First Name & Last Name */}
+                <div>
+                    <TextBox
+                        placeholder="First Name"
+                        type="text"
+                        onChange={(e) => setFirstName(e.target.value)}
+                    />
+                </div>
+                <div>
+                    <TextBox
+                        placeholder="Last Name"
+                        type="text"
+                        onChange={(e) => setLastName(e.target.value)}
+                    />
+                </div>
 
-        {/* Log In Link */}
-        <div className="text-center">
-          <span className="text-gray-700 text-xs">
-            Joined us before?{" "}
-            <button onClick={showLoginForm} className="text-blue-500">
-              Log In
-            </button>
-          </span>
+                {/* Email address */}
+                <div>
+                    <TextBox
+                        placeholder="Email address"
+                        type="text"
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                </div>
+
+                {/* Password */}
+                <div>
+                    <TextBox
+                        placeholder="Password"
+                        type="password"
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                </div>
+
+                {/* Confirm Password */}
+                <div>
+                    <TextBox
+                        placeholder="Confirm Password"
+                        type="password"
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                    />
+                </div>
+
+                {/* Terms of Service and policy section */}
+                <div className="flex items-center space-x-3">
+                    <input type="checkbox" />
+                    <span className="text-md text-gray-300">
+                        I agree to the{" "}
+                        <button className="text-blue-500">
+                            Terms of Service
+                        </button>{" "}
+                        and{" "}
+                        <button className="text-blue-500">
+                            Privacy Policy
+                        </button>
+                    </span>
+                </div>
+
+                {/* Sign up button */}
+                <div className="flex flex-row">
+                    <Button label="Signup" onClick={onSignup} />
+                </div>
+
+                {/* Log In Link */}
+                <div className="text-center">
+                    <span className="text-md text-white">
+                        Joined us before?{" "}
+                        <button
+                            onClick={showLoginForm}
+                            className="text-blue-500"
+                        >
+                            Log In
+                        </button>
+                    </span>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 }
 
 export default SignupForm;

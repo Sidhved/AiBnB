@@ -1,71 +1,96 @@
-import React from "react";
-import TextBox from "../Utilities/TextBox";
-import Button from "../Utilities/Button";
-import Logo from "../../assets/aibnb-logo-final.png";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
+import TextBox from "../Inputs/TextBox";
+import Button from "../Buttons/Button";
+import LargeHeading from "../Texts/LargeHeading";
+import { authQueries } from "../../api/authQueries";
 
 function LoginForm({ showLoginForm }) {
-  return (
-    <div
-      className="space-y-7"
-      style={{
-        height: "100%", // inherit the total height of the parent container
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center", // align the form to the center of the div
-      }}
-    >
-      {/* Form heading */}
-      <div className="space-y-7 text-center">
-        <div>
-          {/* Logo div */}
-          <div className="flex items-center justify-center">
-            <img src={Logo} style={{ height: "100px", width: "100px" }} />
-          </div>
+    // STATES
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
-          {/* Heading for the form */}
-          <h1 className="text-4xl text-gray-700">Log in</h1>
-        </div>
+    // HOOKS
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-        {/* Caption */}
-        <div>
-          <span className="text-gray-700">
-            Velit non ipsum sint in id proident in sunt.
-          </span>
-        </div>
-      </div>
+    // function to login user
+    const onLogin = async () => {
+        const isUserLoggedIn = await authQueries.loginUser(
+            email,
+            password,
+            dispatch
+        );
 
-      {/* Input boxes */}
-      <div className="space-y-7">
-        {/* Email address */}
-        <div>
-          <TextBox placeholder="Email address" />
-        </div>
+        // if user is logged in
+        if (isUserLoggedIn === true) {
+            navigate("/dashboard");
+        } else {
+            // reset the input states
+            resetStates();
+        }
+    };
 
-        {/* Password */}
-        <div>
-          <TextBox placeholder="Password" />
-        </div>
+    // function to reset states
+    const resetStates = () => {
+        setEmail("");
+        setPassword("");
+    };
 
-        {/* Sign up button */}
-        <div>
-          <Button label="Login" />
-        </div>
+    return (
+        <div className="space-y-7 w-[50%]">
+            {/* Form heading */}
+            <div className="space-y-7">
+                <div>
+                    {/* Heading for the form */}
+                    <LargeHeading>LOG IN</LargeHeading>
+                </div>
+            </div>
 
-        {/* Horizontal Line */}
-        <div>
-          <div style={{ height: "2px" }} className="bg-gray-200" />
-        </div>
+            {/* Input boxes */}
+            <div className="space-y-7">
+                {/* Email address */}
+                <div>
+                    <TextBox
+                        value={email}
+                        placeholder="Email address"
+                        type="text"
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                </div>
 
-        {/* Log In Link */}
-        <div className="text-center">
-          <span className="text-gray-700 text-xs">
-            Don't have an account?{" "}
-            <button onClick={showLoginForm} className="text-blue-500">Sign Up</button>
-          </span>
+                {/* Password */}
+                <div>
+                    <TextBox
+                        value={password}
+                        placeholder="Password"
+                        type="password"
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                </div>
+
+                {/* Sign up button */}
+                <div>
+                    <Button label="Login" onClick={onLogin} />
+                </div>
+
+                {/* Log In Link */}
+                <div className="text-center">
+                    <span className="text-md text-gray-400">
+                        Don't have an account?{" "}
+                        <button
+                            onClick={showLoginForm}
+                            className="text-blue-500 underline"
+                        >
+                            Sign Up
+                        </button>
+                    </span>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 }
 
 export default LoginForm;
