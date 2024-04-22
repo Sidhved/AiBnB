@@ -1,12 +1,10 @@
 import React from 'react'
-import { useNavigate } from "react-router-dom";
-import Navbar from "../components/Utilities/Navbar";
-import { useSelector } from "react-redux";
+import { useSelector } from 'react-redux'
+import ShowcaseContainer from '../components/Utilities/ShowcaseContainer';
 
 function Profile() {
-
-  const navigate = useNavigate();
-
+  // Get user acess and refresh token
+  const {accessToken, refreshToken} = useSelector((state) => state.UserReducer);
 
   return (
     <div className="relative ">

@@ -16,6 +16,9 @@ export const UserReducer = (state = initialState, action) => {
         case userActionTypes.SET_ACCESS_TOKEN: {
             // get access token
             const { accessToken } = action.payload;
+
+            console.log("access token from reducer", accessToken);
+
             // set access token to the user state
             return {
                 ...state,
