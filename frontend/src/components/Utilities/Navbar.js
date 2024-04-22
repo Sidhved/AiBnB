@@ -78,7 +78,7 @@ function Navbar() {
                 <div className="flex flex-row space-x-10">
                     {/* Nav items */}
                     {NAV_LINKS.map((link) => (
-                        <NavLink navLabel={link.label} linkTo={link.linkTo}/>
+                        <NavLink key={link.id} navLabel={link.label} linkTo={link.linkTo}/>
                     ))}
                 </div>
             </div>

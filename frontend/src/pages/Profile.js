@@ -1,6 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import ShowcaseContainer from '../components/Utilities/ShowcaseContainer';
+import Navbar from "../components/Utilities/Navbar";
 
 function Profile() {
   // Get user acess and refresh token
