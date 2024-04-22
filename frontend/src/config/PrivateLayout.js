@@ -2,9 +2,9 @@ import { useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router-dom";
 
 const PrivateLayout = () => {
-    const { auth_token } = useSelector((state) => state.UserReducer);
+    const { accessToken } = useSelector((state) => state.UserReducer);
 
-    console.log("auth token", auth_token);
+    console.log("accessToken", accessToken);
 
     // if (auth_token === "") {
     //     return <Navigate to="/" replace />;

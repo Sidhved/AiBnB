@@ -1,26 +1,17 @@
-import classes from "./Dashboard.module.css";
-
-import React, { useState } from "react";
-
-import { ArrowRightIcon } from "@heroicons/react/24/outline";
+import React from "react";
 
 import ShowcaseContainer from "../components/Utilities/ShowcaseContainer";
 import Navbar from "../components/Utilities/Navbar";
 import LargeHeading from "../components/Texts/LargeHeading";
 import ExtraLargeHeading from "../components/Texts/ExtraLargeHeading";
-import PanelButton from "../components/Dashboard/PanelButton";
-import { destinations } from "../constants/destinationData";
-import SectionHeading from "../components/Texts/SectionHeading";
 import Caption from "../components/Texts/Caption";
 import { recommendedTripsData } from "../constants/recommendedTripsData";
 import TripCard from "../components/Cards/TripCard";
 import Button from "../components/Buttons/Button";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function Dashboard() {
-    const [showBuildLabel, setShowBuildLabel] = useState(false);
-
-    const [showDestinations, setShowDestinations] = useState(false);
 
     const navigate = useNavigate();
 
