@@ -1,6 +1,4 @@
 import google.generativeai as genai
-import re
-import json
 
 genai.configure(api_key="AIzaSyD5AajTMhR6PYlK3yvNScZhfytGQBNBv1I")
 
@@ -42,26 +40,6 @@ model = genai.GenerativeModel(model_name="gemini-1.5-pro-latest",
                               safety_settings=safety_settings)
 
 
-def extract_text(itinerary_text):
-    # Extracting the text inside \text{}
-    extracted_text = re.findall(r'\\text\{([^}]*)\}', itinerary_text)
-
-    # Dictionary to hold the structured data
-    itinerary = {}
-    current_day = None
-
-    # Iterate over the extracted text to organize into a JSON structure
-    for text in extracted_text:
-        if 'Day' in text:
-            current_day = text.strip(':')
-            itinerary[current_day] = []
-        elif current_day:  # Append text to the current day list
-            itinerary[current_day].append(text)
-
-    # Convert dictionary to JSON
-    return json.dumps(itinerary, indent=4)
-
-
 def generate_itinerary(destination, days, guests, budget, preferences):
     prompt = [f"{destination} {days} {guests} ${budget} {preferences}"]
-    return extract_text(model.generate_content(prompt).text)
+    return str(model.generate_content(prompt))
