@@ -1,11 +1,14 @@
 import React from "react";
 import classes from "./NavLink.module.css";
+import { useNavigate } from "react-router-dom";
 
 function NavLink({ navLabel, linkTo }) {
+    const navigate  = useNavigate();
+
     return (
-        <a className={classes.navLink} href={linkTo}>
+        <button className={classes.navLink} onClick={() => navigate(linkTo)}>
             {navLabel}
-        </a>
+        </button>
     );
 }
 
