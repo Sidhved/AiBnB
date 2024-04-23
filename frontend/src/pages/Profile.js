@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ShowcaseContainer from "../components/Utilities/ShowcaseContainer";
 import { authQueries } from "../api/authQueries";
 import Navbar from "../components/Utilities/Navbar";
+import LargeHeading from "../components/Texts/LargeHeading";
 
 function Profile() {
     // HOOKS
@@ -25,6 +26,10 @@ function Profile() {
         fetchProfileData();
     }, []);
 
+    // Check if profileData is null
+    if (!profileData) {
+      return <LargeHeading>Loading...</LargeHeading>;  // Or any other fallback UI
+    }
     return (
         <div className="h-[100vh] bg-black">
             <ShowcaseContainer>
@@ -36,12 +41,18 @@ function Profile() {
                     <div className="flex flex-1">
                       {/* Profile Image */}
                       <div>
-
                       </div>
 
                       {/* User Information */}
-                      <div>
-                        
+                      <div className="ml-5">
+                        <LargeHeading>User Details:</LargeHeading>
+                        <div class="grid grid-cols-4 gap-4">
+                          <div>
+                            <p class="text-4xl text-gray-900 dark:text-white">First Name: {profileData.first_name}</p>
+                          </div>
+                          
+                          <div>09</div>
+                      </div>
                       </div>
 
 

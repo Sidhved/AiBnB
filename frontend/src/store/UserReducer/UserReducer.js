@@ -47,6 +47,12 @@ export const UserReducer = (state = initialState, action) => {
                 profileData: profileData,
             };
         }
+        case userActionTypes.LOGOUT_USER:
+            return {
+                ...state,
+                accessToken: null, // Setting accessToken to null
+                profileData: null,
+            };
 
         default: {
             return state;

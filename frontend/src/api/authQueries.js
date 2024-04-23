@@ -107,4 +107,11 @@ export const authQueries = {
             }
         }
     },
+
+    logoutUser: (dispatch) => {
+        dispatch({
+            type: userActionTypes.LOGOUT_USER,
+        });
+
+    }
 };
