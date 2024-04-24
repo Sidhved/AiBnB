@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 django-dotenv = "*"
 django = "*"
+"google.generativeai" = "*"
 
 [dev-packages]
 
