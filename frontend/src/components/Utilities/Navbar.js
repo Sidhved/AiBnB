@@ -1,8 +1,8 @@
 import React from "react";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-
+import { authQueries } from "../../api/authQueries";
 import Logo from "../../assets/logo.jpg";
 import { baseUrl } from "../../api/baseUrl";
 import NavLink from "../Buttons/NavLink";
@@ -11,7 +11,7 @@ const NAV_LINKS = [
     {
         id: 1,
         label: "Home",
-        linkTo: "/",
+        linkTo: "/dashboard",
     },
     {
         id: 2,
@@ -37,29 +37,15 @@ const NAV_LINKS = [
 function Navbar() {
     // declare navigate instance
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     // get auth token from redux
-    const { auth_token } = useSelector((state) => state.UserReducer);
+    const { access_token } = useSelector((state) => state.UserReducer);
 
-    // Handle event when user presses any nav link
-    const handleNavClick = async (navLabel, navPath) => {
-        // if user clicked on nav label is logout
-        if (navLabel === "Logout") {
-            try {
-                // logout user with token
-                await axios.post(`${baseUrl}/auth/logout/`, {
-                    token: auth_token,
-                });
-
-                // After succesful logout, navigate them to login page
-                navigate("/signup");
-            } catch (error) {
-                console.log("error", error);
-            }
-        }
-        else {
-            navigate(navPath); // Navigate based on the path
-        }
+    const handleLogout = () => {
+        authQueries.logoutUser(dispatch);
+        console.log("Logged Out");
+        navigate("/");
     };
 
     return (
@@ -78,11 +64,7 @@ function Navbar() {
                 <div className="flex flex-row space-x-10">
                     {/* Nav items */}
                     {NAV_LINKS.map((link) => (
-                        <NavLink
-                        key={link.id}
-                        navLabel={link.label}
-                        onClick={() => handleNavClick(link.label, link.linkTo)}
-                    />
+                        <NavLink key={link.id} navLabel={link.label} linkTo={link.linkTo} onClick={link.label === "Logout" ? handleLogout : null}/>
                     ))}
                 </div>
             </div>

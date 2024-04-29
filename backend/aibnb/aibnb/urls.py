@@ -22,4 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('authentication.urls')),
     path('todos/', include(todo_urls)),
+    path('itinerary/', include('itinerary_planner.urls')),
 ]

@@ -1,13 +1,13 @@
 import "./App.css";
 import { Provider } from "react-redux";
+import { RouterProvider } from "react-router-dom";
 import { store } from "./store/store";
+import router from "./config/routers";
 
 function App() {
     return (
         <Provider store={store}>
-            <div className="App">
-                <span className="bg-red-500">Hello world!</span>
-            </div>
+            <RouterProvider router={router} />
         </Provider>
     );
 }

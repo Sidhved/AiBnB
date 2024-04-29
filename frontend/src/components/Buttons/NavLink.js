@@ -1,17 +1,21 @@
 import React from "react";
 import classes from "./NavLink.module.css";
+import { useNavigate } from "react-router-dom";
 
-function NavLink({ navLabel, onClick }) {
+function NavLink({ navLabel, linkTo, onClick }) {
+    const navigate = useNavigate();
 
-    const handleClick = (event) => {
-        event.preventDefault();
-        onClick();
+    const handleClick = () => {
+        if (onClick) {
+            onClick(); // Call the passed onClick function if it exists
+        }
+        navigate(linkTo);
     };
 
     return (
-        <a className={classes.navLink} href="#" onClick={handleClick}>
+        <button className={classes.navLink} onClick={handleClick}>
             {navLabel}
-        </a>
+        </button>
     );
 }
 

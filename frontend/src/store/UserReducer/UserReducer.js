@@ -4,10 +4,7 @@ import { userActionTypes } from "./UserActionTypes";
 const initialState = {
     accessToken: "",
     refreshToken: "",
-    email: "",
-    password: "",
-    firstName: "",
-    lastName: "",
+    profileData: null,
 };
 
 // user reducer
@@ -16,6 +13,7 @@ export const UserReducer = (state = initialState, action) => {
         case userActionTypes.SET_ACCESS_TOKEN: {
             // get access token
             const { accessToken } = action.payload;
+
             // set access token to the user state
             return {
                 ...state,
@@ -38,6 +36,22 @@ export const UserReducer = (state = initialState, action) => {
                 email: action.payload.email,
                 firstName: action.payload.firstName,
                 lastName: action.payload.lastName,
+            };
+
+        case userActionTypes.SET_PROFILE_DATA: {
+            // get profile data
+            const { profileData } = action.payload;
+            // set the profile data to the user state
+            return {
+                ...state,
+                profileData: profileData,
+            };
+        }
+        case userActionTypes.LOGOUT_USER:
+            return {
+                ...state,
+                accessToken: null, // Setting accessToken to null
+                profileData: null,
             };
 
         default: {
