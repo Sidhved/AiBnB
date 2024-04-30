@@ -3,6 +3,8 @@ from authentication.models import User
 from django.utils.encoding import force_bytes, smart_str, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from .utils import Util
+import os
 
 class UserSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
@@ -22,6 +24,29 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
 
+class UserEmailVerificationSerializer(serializers.Serializer):
+    email = serializers.EmailField(max_length=255, min_length=3)
+
+    class Meta:
+        fields = ['email']
+
+    def validate(self, data):
+        email = data['email']
+        if User.objects.filter(email=email).exists():
+            raise serializers.ValidationError({'email': 'User with this email already exists.'})
+        else:
+            uid = urlsafe_base64_encode(force_bytes(email))
+            # print("UID: ", uid)
+            link = os.environ.get('VERIFICATION_BASE_URL') +'/auth/activate/' + uid + '/'
+            body = 'Click the link below to activate your account \n' + link
+            data = {
+                'email_subject': 'Account Activation',
+                'email_body': body,
+                'to_email': email,
+            }
+            Util.send_email(data)
+            print("Link: ", link)
+            return data
 
 class UserLoginSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(max_length=255, min_length=3)
@@ -71,13 +96,14 @@ class SendPasswordResetEmailSerializer(serializers.Serializer):
             user = User.objects.get(email=email)
             uidb64 = urlsafe_base64_encode(force_bytes(user.id))
             token = PasswordResetTokenGenerator().make_token(user)
-            link = 'http://localhost:3000/auth/reset-password/' + uidb64 + '/' + token
+            link = os.environ.get('VERIFICATION_BASE_URL')+'/auth/reset-password/' + uidb64 + '/' + token + '/'
             body = 'Click the link below to reset your password \n' + link
             data = {
-                'subject': 'Password Reset',
-                'body': body,
+                'email_subject': 'Password Reset',
+                'email_body': body,
                 'to_email': user.email,
             }
+            Util.send_email(data)
             print("Link: ", link)
             return data
 
@@ -104,3 +130,16 @@ class UserPasswordResetSerializer(serializers.Serializer):
         except DjangoUnicodeDecodeError as identifier:
             PasswordResetTokenGenerator().check_token(user, token)
             raise serializers.ValidationError({'error': 'The reset link is invalid'}, status=401)
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['email', 'first_name', 'last_name', 'phone']
+
+    def update(self, instance, validated_data):
+        instance.email = validated_data.get('email', instance.email)
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.phone = validated_data.get('phone', instance.phone)
+        instance.save()
+        return instance

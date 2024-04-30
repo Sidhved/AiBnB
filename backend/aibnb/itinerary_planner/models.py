@@ -15,23 +15,12 @@ class Preference(models.Model):
 class Itinerary(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=255, null=False)
+    # add jsonfield for itinerary
+    itinerary_description = models.TextField()
+    is_private = models.BooleanField(default=True)
 
     def __str__(self):
         return "{}, {}".format(self.user, self.name)
-
-class ItineraryItem(models.Model):
-    itinerary = models.ForeignKey(Itinerary, on_delete=models.CASCADE)
-    location = models.CharField(max_length=500, null=False)
-    start_date = models.DateField()
-    end_date = models.DateField()
-    time = models.TimeField()
-    item_name = models.CharField(max_length=255, null=False)
-    item_description = models.TextField()
-    item_type = models.CharField(max_length=255, null=False)
-    notes = models.TextField()
-
-    def __str__(self):
-        return "{} -{}".format(self.itinerary, self.item_name)
 
 class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -39,6 +28,10 @@ class Review(models.Model):
     rating = models.IntegerField()
     review = models.TextField()
     date = models.DateField()
+
+    # one review per user per itinerary
+    class Meta:
+        unique_together = ['user', 'itinerary']
 
     def __str__(self):
         return "{} -{} {}".format(self.itinerary, self.rating,self.user)

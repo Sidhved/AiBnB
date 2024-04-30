@@ -1,16 +1,17 @@
 import google.generativeai as genai
-
+import json
 genai.configure(api_key="AIzaSyD5AajTMhR6PYlK3yvNScZhfytGQBNBv1I")
 
 # Set up the model
 generation_config = {
-  "temperature": 0.5,
+  "temperature": 1,
   "top_p": 0.95,
   "top_k": 0,
   "max_output_tokens": 8192,
   "stop_sequences": [
     "~",
   ],
+  "response_mime_type": "application/json",
 }
 
 safety_settings = [
@@ -31,8 +32,8 @@ safety_settings = [
     "threshold": "BLOCK_MEDIUM_AND_ABOVE"
   },
 ]
+system_instruction = "Generate Itinerary using the given inputs in the following format. Do not include escape sequences or new lines: [Title: Duration days tour to Destination, Day 1:{Time Stamp:, Activity:, Travel Details:, Time Stamp:, Activity:, Travel Detail:, Food Recommendation:, Accommodation Recommendation:,}, Day 2:{Time Stamp:, Activity:,  Travel Details:, Time Stamp:, Activity:, Travel Detail:, Food Recommendation:, Accommodation Recommendation:}, {Day 3:{Time Stamp:, Activity:, Travel Details:, Time Stamp:, Activity:, Travel Detail:, Food Recommendation:,} ]~"
 
-system_instruction = "Generate Itinerary using the given inputs strictly in the following format, furnish with optimum arrival and departure details if not provided:\n[\nDay 1:{\nArrival Time Stamp,\nArrival Travel details,\nTime Stamp,\nActivity,\nPlace Coordinates,\nTravel Details,\nTime Stamp,\nActivity,\nPlace Coordinates,\nTravel Detail,\nFood and Accommodation Recommendation,\n},\nDay 2:{\nTime Stamp,\nActivity,\nPlace Coordinates,\nTravel Details,\nTime Stamp,\nActivity,\nPlace Coordinates,\nTravel Detail,\nFood and Accommodation Recommendation\n}\n{\nDay 3:{\nTime Stamp,\nActivity,\nPlace Coordinates,\nTravel Details,\nTime Stamp,\nActivity,\nPlace Coordinates,\nTravel Detail,\nFood and Accommodation Recommendation,\nDeparture Time Stamp,\nDeparture Travel Details\n}\n]\n~"
 
 model = genai.GenerativeModel(model_name="gemini-1.5-pro-latest",
                               generation_config=generation_config,
@@ -42,4 +43,6 @@ model = genai.GenerativeModel(model_name="gemini-1.5-pro-latest",
 
 def generate_itinerary(destination, days, guests, budget, preferences):
     prompt = [f"{destination} {days} {guests} ${budget} {preferences}"]
-    return str(model.generate_content(prompt))
+    itinerary_response = model.generate_content(prompt).text
+    cleaned_string = itinerary_response.replace('\\', '').replace('\n', '')
+    return cleaned_string
