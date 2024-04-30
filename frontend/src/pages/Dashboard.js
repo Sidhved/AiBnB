@@ -9,7 +9,6 @@ import { recommendedTripsData } from "../constants/recommendedTripsData";
 import TripCard from "../components/Cards/TripCard";
 import Button from "../components/Buttons/Button";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 function Dashboard() {
 

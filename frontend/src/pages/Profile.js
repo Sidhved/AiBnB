@@ -1,61 +1,127 @@
-import React, { useEffect } from "react";
+import classes from "./Profile.module.css";
+import { ArrowRightIcon, UserCircleIcon } from "@heroicons/react/24/outline";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import ShowcaseContainer from "../components/Utilities/ShowcaseContainer";
-import { authQueries } from "../api/authQueries";
 import Navbar from "../components/Utilities/Navbar";
 import LargeHeading from "../components/Texts/LargeHeading";
+import { authQueries } from "../api/authQueries";
+import { itineraryQueries } from "../api/itineraryQueries";
+
+const ProfileLabel = ({ label, value }) => (
+    <div className="flex flex-row">
+        <span className="text-white font-bold">{label}:&nbsp;</span>
+        <span className="text-white">{value}</span>
+    </div>
+);
 
 function Profile() {
-  // HOOKS
-  const dispatch = useDispatch();
+    // STATES
+    const [itineraries, setItineraries] = useState([]);
 
-  // Get user acess and refresh token
-  const { accessToken, profileData } = useSelector(
-    (state) => state.UserReducer
-  );
+    // HOOKS
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-  // function to fetch profile data
-  const fetchProfileData = async () => {
-    // invoke a api call to get profile data
-    await authQueries.getProfile(accessToken, profileData, dispatch);
-  };
+    // Get user acess and refresh token
+    const { accessToken, profileData } = useSelector(
+        (state) => state.UserReducer
+    );
 
-  // Get user information on load
-  useEffect(() => {
-    fetchProfileData();
-  }, []);
+    // function to fetch profile data
+    const fetchProfileData = async () => {
+        // invoke a api call to get profile data
+        await authQueries.getProfile(accessToken, dispatch);
 
-  // Check if profileData is null
-  if (!profileData) {
-    return <LargeHeading>Loading...</LargeHeading>;  // Or any other fallback UI
-  }
-  return (
-    <div className="min-h-screen bg-black">
-      <ShowcaseContainer>
-        {/* Navbar */}
-        <Navbar />
+        // get the itineraries for the user
+        const itineraries = await itineraryQueries.getAllItineraries(
+            accessToken
+        );
 
-        {/* Main */}
-        <div className="flex flex-col items-center justify-center h-full">
-          <div className="max-w-4xl mx-auto p-6 bg-black rounded-lg border border-gray-700">
-            <h3 className="text-2xl font-semibold mb-4 dark:text-white">User Details:</h3>
+        setItineraries(itineraries);
+    };
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <p className="text-lg md:text-xl font-medium dark:text-white">First Name: <span className="font-normal dark:text-white">{profileData.first_name}</span></p>
-                <p className="text-lg md:text-xl font-medium mt-2 dark:text-white">Phone: <span className="font-normal dark:text-white">{profileData.phone}</span></p>
-              </div>
-              <div>
-                <p className="text-lg md:text-xl font-medium dark:text-white">Last Name: <span className="font-normal dark:text-white">{profileData.last_name}</span></p>
-                <p className="text-lg md:text-xl font-medium mt-2 dark:text-white">Email: <span className="font-normal dark:text-white">{profileData.email}</span></p>
-              </div>
-            </div>
-          </div>
+    // function to navigate to itinerary page
+    const handleItineraryClick = (itineraryId) => {
+        navigate(`/itinerary/${itineraryId}`);
+    };
+
+    // Get user information on load
+    useEffect(() => {
+        fetchProfileData();
+    }, []);
+
+    return (
+        <div className="h-[100vh] overflow-hidden bg-black">
+            {/* Navbar */}
+            <Navbar />
+
+            {/* Main */}
+            <ShowcaseContainer>
+                <div className="flex flex-row space-x-10 h-[100%] py-5">
+                    {/* My profile information */}
+                    <div className="p-5 flex flex-[0.2] flex-col border-2 border-white h-[80%]">
+                        {/* Profile Image */}
+                        <div>
+                            <UserCircleIcon height={200} color="white" />
+                        </div>
+
+                        {/* Profile Information */}
+                        <div>
+                            <ProfileLabel
+                                label="Email"
+                                value={profileData?.email}
+                            />
+                            <ProfileLabel
+                                label="Name"
+                                value={`${profileData?.first_name} ${profileData?.last_name}`}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col flex-1 h-[80%] border-2 border-white p-5 space-y-3">
+                        <LargeHeading>MY ITINERARIES</LargeHeading>
+
+                        {/* If itenaries are empty */}
+                        {itineraries?.length === 0 ? (
+                            <div className="h-[100%] flex flex-col items-center justify-center">
+                                <span className="text-white">
+                                    No Itineraries to show
+                                </span>
+                            </div>
+                        ) : (
+                            <div className="space-y-5">
+                                {/* Map itineraries */}
+                                {itineraries.map((itinerary, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() =>
+                                            handleItineraryClick(itinerary.id)
+                                        }
+                                        className={`flex flex-row w-[100%] items-center justify-between p-5 border border-white ${classes.profileBtn}`}
+                                    >
+                                        <div>
+                                            <span className="text-white text-lg">
+                                                {itinerary.name}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <ArrowRightIcon
+                                                color="white"
+                                                height={30}
+                                            />
+                                        </div>
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </ShowcaseContainer>
         </div>
-      </ShowcaseContainer>
-    </div>
-  );
+    );
 }
 
 export default Profile;

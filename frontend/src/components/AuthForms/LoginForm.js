@@ -7,7 +7,7 @@ import Button from "../Buttons/Button";
 import LargeHeading from "../Texts/LargeHeading";
 import { authQueries } from "../../api/authQueries";
 
-function LoginForm({ showLoginForm }) {
+function LoginForm({ showLoginForm, showResetPasswordForm }) {
     // STATES
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -87,7 +87,16 @@ function LoginForm({ showLoginForm }) {
                             Sign Up
                         </button>
                     </span>
+                    <span className="text-md text-gray-400">
+                        &nbsp;or&nbsp;{" "}
+                    </span>
+                    {/* Forgot Password */}
+                    <button onClick={showResetPasswordForm} className="text-blue-500 underline">
+                        Forgot Password
+                    </button>
                 </div>
+
+                {/*  */}
             </div>
         </div>
     );

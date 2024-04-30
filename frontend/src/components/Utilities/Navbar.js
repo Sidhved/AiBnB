@@ -14,16 +14,6 @@ const NAV_LINKS = [
         linkTo: "/dashboard",
     },
     {
-        id: 2,
-        label: "Service",
-        linkTo: "/service",
-    },
-    {
-        id: 3,
-        label: "Event",
-        linkTo: "/event",
-    },
-    {
         id: 4,
         label: "Profile",
         linkTo: "/profile",
@@ -64,7 +54,14 @@ function Navbar() {
                 <div className="flex flex-row space-x-10">
                     {/* Nav items */}
                     {NAV_LINKS.map((link) => (
-                        <NavLink key={link.id} navLabel={link.label} linkTo={link.linkTo} onClick={link.label === "Logout" ? handleLogout : null}/>
+                        <NavLink
+                            key={link.id}
+                            navLabel={link.label}
+                            linkTo={link.linkTo}
+                            onClick={
+                                link.label === "Logout" ? handleLogout : null
+                            }
+                        />
                     ))}
                 </div>
             </div>

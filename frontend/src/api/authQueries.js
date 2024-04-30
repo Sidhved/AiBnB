@@ -42,6 +42,8 @@ export const authQueries = {
                 payload: { refreshToken: refresh },
             });
 
+            //
+
             // return true to indicate that user has registered succesfully
             return true;
         } catch (error) {
@@ -83,35 +85,78 @@ export const authQueries = {
     },
 
     // get profile
-    getProfile: async (accessToken, profileDataFromRedux, dispatch) => {
+    getProfile: async (accessToken, dispatch) => {
         // If profile data is not present in redux
-        if (!profileDataFromRedux) {
-            try {
-                // pass the access token in the authorization header
-                const response = await axios.get(`${baseUrl}/auth/profile/`, {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                    },
-                });
+        try {
+            // pass the access token in the authorization header
+            const response = await axios.get(`${baseUrl}/auth/profile/`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
 
-                // get profile data
-                const profileData = response.data.data;
+            // get profile data
+            const profileData = response.data.data;
 
-                // dispatch the response data to redux
-                dispatch({
-                    type: userActionTypes.SET_PROFILE_DATA,
-                    payload: { profileData: profileData },
-                });
-            } catch (error) {
-                console.error("Error while fetching getting profile", error);
-            }
+            // dispatch the response data to redux
+            dispatch({
+                type: userActionTypes.SET_PROFILE_DATA,
+                payload: { profileData: profileData },
+            });
+        } catch (error) {
+            console.error("Error while fetching getting profile", error);
         }
     },
 
+    // function to logout the user
     logoutUser: (dispatch) => {
+        // flush the tokens
         dispatch({
             type: userActionTypes.LOGOUT_USER,
         });
+    },
 
-    }
+    // function to send a reset password email
+    sendResetPasswordEmail: async (email) => {
+        // create a post request to send a reset password email
+        try {
+            await axios.post(`${baseUrl}/auth/send-password-reset-email/`, {
+                email: email,
+            });
+        } catch (error) {
+            console.log("Something went wrong during sending email", error);
+        }
+    },
+
+    // function to send verification email
+    sendVerificationEmail: async (email) => {
+        // create a post request to send a verification email
+        try {
+            await axios.post(`${baseUrl}/auth/verify-user/`, {
+                email: email,
+            });
+        } catch (error) {
+            console.log("Error while sending email for verification", error);
+        }
+    },
+
+    // function to reset password
+    resetPassword: async (newPassword, accessToken) => {
+
+        // create a post request to reset the password
+        try {
+            await axios.post(
+                `${baseUrl}/auth/change-password/`,
+                {
+                    password: newPassword,
+                    password2: newPassword,
+                },
+                {
+                    headers: `Bearer ${accessToken}`,
+                }
+            );
+        } catch (error) {
+            console.log("error", error);
+        }
+    },
 };

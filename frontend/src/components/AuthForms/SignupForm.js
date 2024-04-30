@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -7,7 +7,7 @@ import TextBox from "../Inputs/TextBox";
 import Button from "../Buttons/Button";
 import LargeHeading from "../Texts/LargeHeading";
 
-function SignupForm({ showLoginForm }) {
+function SignupForm({ showLoginForm, token }) {
     // STATES
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -15,7 +15,6 @@ function SignupForm({ showLoginForm }) {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [phone, setPhone] = useState("12345");
-    const [isLoading, setIsLoading] = useState(false); // state to show an actiivty indicator during signup
 
     // HOOKS
     const dispatch = useDispatch();
@@ -23,29 +22,21 @@ function SignupForm({ showLoginForm }) {
 
     // function to handle signup
     const onSignup = async () => {
-        // start the activity indicator
-        setIsLoading(true);
+        // send verification email
+        await authQueries.sendVerificationEmail(email);
 
-        const isUserRegistered = await authQueries.registerUser(
-            email,
-            password,
-            confirmPassword,
-            firstName,
-            lastName,
-            phone,
-            dispatch
+        // Set user data to local storage
+        localStorage.setItem(
+            "userData",
+            JSON.stringify({
+                email: email,
+                firstName: firstName,
+                lastName: lastName,
+                password: password,
+                confirmPassword: confirmPassword,
+                phone: phone,
+            })
         );
-
-        
-        // if user has registered
-        if (isUserRegistered === true) {
-            navigate("/dashboard");
-        } else {
-            // reset all states
-            resetStates();
-        }
-        // stop the loading indicator
-        setIsLoading(false);
     };
 
     // function to reset the states
@@ -56,6 +47,40 @@ function SignupForm({ showLoginForm }) {
         setPassword("");
         setConfirmPassword("");
     };
+
+    // function to register user
+    const registerUser = async () => {
+        // get user data
+        const userDataString = localStorage.getItem("userData");
+        // parse the json string
+        const userData = JSON.parse(userDataString);
+
+        console.log("user data", userData);
+
+        const isUserRegistered = await authQueries.registerUser(
+            userData.email,
+            userData.password,
+            userData.confirmPassword,
+            userData.firstName,
+            userData.lastName,
+            userData.phone,
+            dispatch
+        );
+
+        // if user has registered
+        if (isUserRegistered === true) {
+            navigate("/dashboard");
+        } else {
+            // reset all states
+            resetStates();
+        }
+    };
+
+    useEffect(() => {
+        if (token) {
+            registerUser();
+        }
+    }, []);
 
     return (
         <div className="space-y-7 flex flex-col w-[50%]">
