@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-s%zg^_jl30txa1dwi6=dg0ar9m9l7hz5_07bzx4-l&l5%%ck7t'
+SECRET_KEY = os.environ.get(DJANGO_KEY)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -80,7 +80,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'aibnb.wsgi.app'
+WSGI_APPLICATION = 'aibnb.vercel.app'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
