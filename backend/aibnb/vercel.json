@@ -3,7 +3,7 @@
       {
         "src": "aibnb/wsgi.py",
         "use": "@vercel/python",
-        "config": { "maxLambdaSize": "15mb" }
+        "config": { "maxLambdaSize": "15mb", "runitme": "python3.12" }
       }
     ],
     "routes": [
